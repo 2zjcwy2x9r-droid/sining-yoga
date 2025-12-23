@@ -6,7 +6,9 @@ Page({
     userInfo: null,
     weekSchedule: [],
     loading: false,
-    weekDays: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+    weekDays: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+    selectedDay: null,
+    showModal: false
   },
 
   onLoad() {
@@ -160,8 +162,34 @@ Page({
     return `${hours}:${minutes}`
   },
 
+  // 点击某一天，显示该天的课程
+  selectDay(e) {
+    const dayIndex = e.currentTarget.dataset.index
+    const selectedDay = this.data.weekSchedule[dayIndex]
+    
+    this.setData({
+      selectedDay: selectedDay,
+      showModal: true
+    })
+  },
+
+  // 关闭弹窗
+  closeModal() {
+    this.setData({
+      showModal: false,
+      selectedDay: null
+    })
+  },
+
+  // 阻止弹窗背景点击关闭
+  preventClose() {
+    // 空函数，阻止事件冒泡
+  },
+
+  // 跳转到课程详情
   navigateToClassDetail(e) {
     const classId = e.currentTarget.dataset.id
+    this.closeModal()
     wx.navigateTo({
       url: `/pages/class-detail/index?id=${classId}`
     })
