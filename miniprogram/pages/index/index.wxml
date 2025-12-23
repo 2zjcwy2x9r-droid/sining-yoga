@@ -1,11 +1,30 @@
 <!--pages/index/index.wxml-->
 <view class="container">
-  <!-- 顶部欢迎区域 -->
-  <view class="header">
-    <view class="welcome">
-      <text class="title">本周课程</text>
-      <text class="subtitle">选择您喜欢的课程</text>
+  <!-- 顶部Banner区域 -->
+  <view class="banner">
+    <view class="banner-content">
+      <text class="banner-title">瑜伽课程</text>
+      <text class="banner-subtitle">Yoga Classes</text>
     </view>
+    <view class="banner-decoration"></view>
+  </view>
+
+  <!-- 周一到周日标签 -->
+  <view class="week-tabs">
+    <scroll-view class="tabs-scroll" scroll-x="true" scroll-with-animation="true">
+      <view class="tabs-container">
+        <view 
+          wx:for="{{weekSchedule}}" 
+          wx:key="dayIndex"
+          wx:for-item="day"
+          class="tab-item {{day.classes.length > 0 ? 'has-classes' : ''}}"
+        >
+          <text class="tab-day">{{day.dayName}}</text>
+          <text class="tab-date">{{day.dateLabel}}</text>
+          <view wx:if="{{day.classes.length > 0}}" class="tab-badge">{{day.classes.length}}</view>
+        </view>
+      </view>
+    </scroll-view>
   </view>
 
   <!-- 加载状态 -->
@@ -15,51 +34,59 @@
 
   <!-- 课程列表 -->
   <view wx:else class="classes-container">
-    <view wx:if="{{classes.length === 0}}" class="empty">
-      <text>本周暂无课程</text>
-    </view>
-    
-    <view wx:for="{{classes}}" wx:key="date" class="day-section">
+    <view wx:for="{{weekSchedule}}" wx:key="dayIndex" wx:for-item="day" class="day-section">
       <view class="day-header">
-        <text class="day-label">{{item.dateLabel}}</text>
-        <text class="day-date">{{item.date}}</text>
+        <view class="day-title">
+          <text class="day-name">{{day.dayName}}</text>
+          <text class="day-date">{{day.dateLabel}}</text>
+        </view>
+        <text wx:if="{{day.classes.length > 0}}" class="day-count">{{day.classes.length}}节课程</text>
       </view>
-      
-      <view class="classes-list">
+
+      <!-- 课程卡片列表 -->
+      <view wx:if="{{day.classes.length > 0}}" class="classes-list">
         <view 
-          wx:for="{{item.classes}}" 
+          wx:for="{{day.classes}}" 
           wx:for-item="class"
           wx:key="id" 
           class="class-card"
           bindtap="navigateToClassDetail"
           data-id="{{class.id}}"
         >
-          <view class="class-header">
-            <text class="class-name">{{class.name}}</text>
-            <view class="class-status {{class.available ? 'available' : 'full'}}">
-              {{class.available ? '可预订' : '已满'}}
-            </view>
+          <view class="class-time-section">
+            <text class="class-time">{{class.startTime}}</text>
+            <text class="class-duration">{{class.duration}}分钟</text>
           </view>
           
-          <view class="class-info">
-            <view class="info-item">
-              <text class="info-icon">👤</text>
-              <text class="info-text">{{class.instructor}}</text>
+          <view class="class-content">
+            <view class="class-header">
+              <text class="class-name">{{class.name}}</text>
+              <view class="class-status {{class.available ? 'available' : 'full'}}">
+                {{class.available ? '可预订' : '已满'}}
+              </view>
             </view>
-            <view class="info-item">
-              <text class="info-icon">🕐</text>
-              <text class="info-text">{{class.start_time}} - {{class.end_time}}</text>
+            
+            <view class="class-info">
+              <view class="info-row">
+                <text class="info-label">老师：</text>
+                <text class="info-value">{{class.instructor || '待定'}}</text>
+              </view>
+              <view class="info-row">
+                <text class="info-label">时间：</text>
+                <text class="info-value">{{class.startTime}} - {{class.endTime}}</text>
+              </view>
+              <view class="info-row">
+                <text class="info-label">时长：</text>
+                <text class="info-value">{{class.duration}}分钟</text>
+              </view>
             </view>
-            <view class="info-item">
-              <text class="info-icon">👥</text>
-              <text class="info-text">{{class.booked_count}}/{{class.capacity}}人</text>
-            </view>
-          </view>
-          
-          <view wx:if="{{class.description}}" class="class-desc">
-            {{class.description}}
           </view>
         </view>
+      </view>
+
+      <!-- 无课程提示 -->
+      <view wx:else class="empty-day">
+        <text class="empty-text">今日暂无课程</text>
       </view>
     </view>
   </view>

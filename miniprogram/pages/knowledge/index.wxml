@@ -1,0 +1,61 @@
+<!--pages/knowledge/index.wxml-->
+<view class="container">
+  <!-- 知识库列表 -->
+  <view wx:if="{{!selectedBase}}" class="base-list">
+    <view class="header">
+      <text class="title">知识库</text>
+    </view>
+    
+    <view wx:if="{{loading}}" class="loading">加载中...</view>
+    
+    <view wx:else class="list">
+      <view 
+        wx:for="{{knowledgeBases}}" 
+        wx:key="id" 
+        class="base-item"
+        bindtap="selectBase"
+        data-id="{{item.id}}"
+      >
+        <view class="base-name">{{item.name}}</view>
+        <view class="base-desc">{{item.description || '暂无描述'}}</view>
+        <view class="base-meta">
+          <text class="meta-item">ID: {{item.id}}</text>
+        </view>
+      </view>
+      
+      <view wx:if="{{knowledgeBases.length === 0 && !loading}}" class="empty">
+        暂无知识库
+      </view>
+    </view>
+  </view>
+
+  <!-- 知识项列表 -->
+  <view wx:else class="item-list">
+    <view class="header">
+      <text class="back-btn" bindtap="backToList">← 返回</text>
+      <text class="title">{{selectedBase.name}}</text>
+    </view>
+    
+    <view wx:if="{{loadingItems}}" class="loading">加载中...</view>
+    
+    <view wx:else class="list">
+      <view 
+        wx:for="{{knowledgeItems}}" 
+        wx:key="id" 
+        class="item"
+      >
+        <view class="item-title">{{item.title}}</view>
+        <view class="item-content">{{item.content}}</view>
+        <view class="item-meta">
+          <text class="meta-item">ID: {{item.id}}</text>
+          <text wx:if="{{item.created_at}}" class="meta-item">{{item.created_at}}</text>
+        </view>
+      </view>
+      
+      <view wx:if="{{knowledgeItems.length === 0 && !loadingItems}}" class="empty">
+        暂无知识项
+      </view>
+    </view>
+  </view>
+</view>
+
