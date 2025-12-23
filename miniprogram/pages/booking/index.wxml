@@ -1,14 +1,5 @@
 <!--pages/booking/index.wxml-->
 <view class="container">
-  <!-- 顶部Banner区域 -->
-  <view class="banner">
-    <view class="banner-content">
-      <text class="banner-title">课程预订</text>
-      <text class="banner-subtitle">Book Your Class</text>
-    </view>
-    <view class="banner-decoration"></view>
-  </view>
-
   <!-- 周一到周日日期选择器 -->
   <view class="week-selector">
     <scroll-view class="week-scroll" scroll-x="true" scroll-with-animation="true" scroll-left="{{selectedDayIndex * 120}}">
