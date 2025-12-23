@@ -16,7 +16,7 @@ App({
   },
   globalData: {
     userInfo: null,
-    apiBaseUrl: 'http://localhost:8080/api/v1' // 根据实际情况修改
+    apiBaseUrl: 'http://21.6.230.48:8080/api/v1' // 根据实际情况修改
   }
 })
 
