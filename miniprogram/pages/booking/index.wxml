@@ -1,38 +1,114 @@
 <!--pages/booking/index.wxml-->
 <view class="container">
-  <view class="date-selector">
-    <picker mode="date" value="{{selectedDate}}" bindchange="onDateChange">
-      <view class="picker">
-        选择日期：{{selectedDate}}
-      </view>
-    </picker>
+  <!-- 顶部Banner区域 -->
+  <view class="banner">
+    <view class="banner-content">
+      <text class="banner-title">课程预订</text>
+      <text class="banner-subtitle">Book Your Class</text>
+    </view>
+    <view class="banner-decoration"></view>
   </view>
 
-  <view class="classes-list">
-    <view 
-      wx:for="{{classes}}" 
-      wx:key="id" 
-      class="class-item"
-    >
-      <view class="class-info">
-        <text class="class-name">{{item.name}}</text>
-        <text class="class-instructor">教练：{{item.instructor}}</text>
-        <text class="class-time">{{item.startTime}} - {{item.endTime}}</text>
-        <text class="class-capacity">
-          已预订：{{item.bookedCount}}/{{item.capacity}}
-        </text>
+  <!-- 周一到周日日期选择器 -->
+  <view class="week-selector">
+    <scroll-view class="week-scroll" scroll-x="true" scroll-with-animation="true" scroll-left="{{selectedDayIndex * 120}}">
+      <view class="week-container">
+        <view 
+          wx:for="{{weekSchedule}}" 
+          wx:key="dayIndex"
+          wx:for-item="day"
+          class="week-day-item {{selectedDayIndex === day.dayIndex ? 'selected' : ''}}"
+          bindtap="selectDay"
+          data-index="{{day.dayIndex}}"
+        >
+          <text class="week-day-label">{{day.dateLabel}}</text>
+          <text class="week-day-number">{{day.date.split('-')[2]}}</text>
+        </view>
       </view>
-      <button 
-        class="book-btn {{item.available ? '' : 'disabled'}}"
-        bindtap="bookClass"
-        data-id="{{item.id}}"
-        disabled="{{!item.available}}"
-      >
-        {{item.available ? '预订' : '已满'}}
-      </button>
+    </scroll-view>
+  </view>
+
+  <!-- 排序和筛选区域 -->
+  <view class="filter-bar">
+    <view class="filter-item">
+      <text class="filter-text">智能排序</text>
+      <text class="filter-arrow">▼</text>
+    </view>
+    <view class="filter-item">
+      <text class="filter-text">全城</text>
+      <text class="filter-arrow">▼</text>
+    </view>
+    <view class="filter-right">
+      <text class="free-tag">免费玩</text>
     </view>
   </view>
 
-  <view wx:if="{{loading}}" class="loading">加载中...</view>
-</view>
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
 
+  <!-- 课程列表 -->
+  <view wx:else class="classes-container">
+    <view wx:if="{{classes.length > 0}}" class="classes-list">
+      <view 
+        wx:for="{{classes}}" 
+        wx:key="id" 
+        wx:for-item="class"
+        class="class-card"
+        bindtap="navigateToClassDetail"
+        data-id="{{class.id}}"
+      >
+        <!-- 课程标题和价格 -->
+        <view class="class-header">
+          <text class="class-name">{{class.name}}</text>
+          <text class="class-price">免费</text>
+        </view>
+
+        <!-- 课程信息 -->
+        <view class="class-info">
+          <view class="info-row">
+            <text class="info-icon">📍</text>
+            <text class="info-text">瑜伽教室 | 距离您500m</text>
+          </view>
+          <view class="info-row">
+            <text class="info-icon">🕐</text>
+            <text class="info-text">{{weekSchedule[selectedDayIndex] ? weekSchedule[selectedDayIndex].fullDate : ''}} {{weekSchedule[selectedDayIndex] ? weekSchedule[selectedDayIndex].dayName : ''}} {{class.startTime}}-{{class.endTime}}</text>
+          </view>
+          <view class="info-row">
+            <text class="info-icon">👤</text>
+            <text class="info-text">老师：{{class.instructor || '待定'}}</text>
+          </view>
+        </view>
+
+        <!-- 参与人数和预订按钮 -->
+        <view class="class-footer">
+          <view class="class-participants">
+            <view class="participant-avatars">
+              <view class="avatar-placeholder"></view>
+              <view class="avatar-placeholder"></view>
+              <view class="avatar-placeholder"></view>
+            </view>
+            <text class="participant-text">报名中 {{class.bookedCount || 0}}/{{class.capacity || 0}}</text>
+          </view>
+          <button 
+            class="book-button {{class.available ? '' : 'disabled'}}"
+            bindtap="bookClass"
+            data-id="{{class.id}}"
+            disabled="{{!class.available}}"
+            catchtap="stopPropagation"
+          >
+            {{class.available ? '去报名' : '已满'}}
+          </button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 无课程提示 -->
+    <view wx:else class="empty-state">
+      <text class="empty-icon">📅</text>
+      <text class="empty-text">该日暂无课程</text>
+      <text class="empty-hint">请选择其他日期查看课程</text>
+    </view>
+  </view>
+</view>
