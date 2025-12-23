@@ -1,0 +1,485 @@
+/* pages/class-detail/index.wxss */
+.container {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding-bottom: 40rpx;
+}
+
+.loading {
+  text-align: center;
+  padding: 100rpx 0;
+  color: #999;
+  font-size: 28rpx;
+}
+
+.content {
+  padding: 0;
+}
+
+/* 课程信息卡片 - 紫色渐变风格 */
+.class-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 0 0 40rpx 40rpx;
+  padding: 50rpx 40rpx 40rpx;
+  margin-bottom: 20rpx;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.class-card::before {
+  content: '';
+  position: absolute;
+  top: -100rpx;
+  right: -100rpx;
+  width: 300rpx;
+  height: 300rpx;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.class-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30rpx;
+  padding-bottom: 25rpx;
+  border-bottom: 1rpx solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.class-name {
+  font-size: 44rpx;
+  font-weight: bold;
+  color: white;
+  flex: 1;
+  line-height: 1.4;
+}
+
+.class-status {
+  padding: 10rpx 24rpx;
+  border-radius: 24rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10rpx);
+  color: white;
+}
+
+.class-status.available {
+  background: rgba(76, 175, 80, 0.3);
+}
+
+.class-status.full {
+  background: rgba(244, 67, 54, 0.3);
+}
+
+.class-info-section {
+  margin-bottom: 30rpx;
+  position: relative;
+  z-index: 1;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  padding: 18rpx 0;
+  border-bottom: 1rpx solid rgba(255, 255, 255, 0.2);
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.9);
+  width: 120rpx;
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 28rpx;
+  color: white;
+  flex: 1;
+  font-weight: 400;
+}
+
+.description-section,
+.instructor-section {
+  margin-top: 30rpx;
+  padding-top: 30rpx;
+  border-top: 1rpx solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 18rpx;
+  display: block;
+}
+
+.description,
+.instructor-info {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.8;
+  display: block;
+  margin-top: 12rpx;
+}
+
+/* 操作按钮区域 */
+.action-buttons {
+  display: flex;
+  gap: 20rpx;
+  padding: 0 20rpx 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.btn {
+  flex: 1;
+  height: 96rpx;
+  line-height: 96rpx;
+  border-radius: 48rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  border: none;
+  box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.3);
+  transition: all 0.3s;
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-cancel {
+  background: white;
+  color: #f44336;
+  border: 2rpx solid #f44336;
+  box-shadow: 0 2rpx 8rpx rgba(244, 67, 54, 0.2);
+}
+
+.btn-review {
+  background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+  color: white;
+  box-shadow: 0 4rpx 12rpx rgba(255, 152, 0, 0.3);
+}
+
+/* 评价区域 */
+.reviews-section {
+  background: white;
+  border-radius: 24rpx;
+  padding: 40rpx;
+  margin: 0 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(102, 126, 234, 0.1);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.section-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.review-count {
+  font-size: 24rpx;
+  color: #999;
+  margin-left: 12rpx;
+  background: #f5f5f5;
+  padding: 4rpx 12rpx;
+  border-radius: 12rpx;
+}
+
+.empty-reviews {
+  text-align: center;
+  padding: 80rpx 0;
+  color: #999;
+  font-size: 28rpx;
+}
+
+.review-item {
+  padding: 30rpx 0;
+  border-bottom: 1rpx solid #f8f9fa;
+}
+
+.review-item:last-child {
+  border-bottom: none;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18rpx;
+}
+
+.review-user {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.review-rating {
+  display: flex;
+  gap: 6rpx;
+}
+
+.star {
+  font-size: 32rpx;
+  color: #ddd;
+}
+
+.star.filled {
+  color: #ffc107;
+}
+
+.review-content {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 18rpx;
+  display: block;
+}
+
+.review-images {
+  display: flex;
+  gap: 12rpx;
+  margin-bottom: 18rpx;
+  flex-wrap: wrap;
+}
+
+.review-image {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.review-time {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 评价弹窗样式 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4rpx);
+}
+
+.modal-content {
+  width: 90%;
+  max-width: 640rpx;
+  background: white;
+  border-radius: 24rpx;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100rpx);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 35rpx 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 24rpx 24rpx 0 0;
+}
+
+.modal-title {
+  font-size: 38rpx;
+  font-weight: bold;
+  color: white;
+}
+
+.modal-close {
+  font-size: 40rpx;
+  color: white;
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.9;
+}
+
+.modal-close:active {
+  opacity: 0.7;
+}
+
+.modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 35rpx;
+}
+
+.rating-section,
+.content-section,
+.images-section {
+  margin-bottom: 35rpx;
+}
+
+.rating-label,
+.content-label,
+.images-label {
+  font-size: 30rpx;
+  color: #333;
+  margin-bottom: 20rpx;
+  display: block;
+  font-weight: 500;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 15rpx;
+  justify-content: center;
+  padding: 20rpx 0;
+}
+
+.star-input {
+  font-size: 56rpx;
+  color: #ddd;
+  transition: all 0.2s;
+}
+
+.star-input.filled {
+  color: #ffc107;
+  transform: scale(1.1);
+}
+
+.content-input {
+  width: 100%;
+  min-height: 240rpx;
+  padding: 24rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  background: #f8f9fa;
+  box-sizing: border-box;
+}
+
+.content-input:focus {
+  border-color: #667eea;
+  background: white;
+}
+
+.images-upload {
+  display: flex;
+  gap: 18rpx;
+  flex-wrap: wrap;
+}
+
+.image-preview {
+  position: relative;
+  width: 160rpx;
+  height: 160rpx;
+}
+
+.preview-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.remove-img {
+  position: absolute;
+  top: -8rpx;
+  right: -8rpx;
+  width: 44rpx;
+  height: 44rpx;
+  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+  box-shadow: 0 2rpx 8rpx rgba(244, 67, 54, 0.3);
+}
+
+.image-upload-btn {
+  width: 160rpx;
+  height: 160rpx;
+  border: 2rpx dashed #ddd;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 64rpx;
+  color: #999;
+  background: #fafafa;
+  transition: all 0.3s;
+}
+
+.image-upload-btn:active {
+  background: #f0f0f0;
+  border-color: #667eea;
+  color: #667eea;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 20rpx;
+  padding: 30rpx;
+  border-top: 1rpx solid #f0f0f0;
+  background: #fafafa;
+  border-radius: 0 0 24rpx 24rpx;
+}
+
+.modal-footer .btn {
+  flex: 1;
+  height: 88rpx;
+  line-height: 88rpx;
+}
+
+.modal-footer .btn-cancel {
+  background: white;
+  color: #666;
+  border: 2rpx solid #e0e0e0;
+  box-shadow: none;
+}
+
+.modal-footer .btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.3);
+}

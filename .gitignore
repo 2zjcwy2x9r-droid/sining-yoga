@@ -1,0 +1,11 @@
+.idea/
+stub/
+output/
+.vscode/
+.history/
+.gvm/
+polaris/log/
+__debug_bin
+bin/
+venv/
+logs/

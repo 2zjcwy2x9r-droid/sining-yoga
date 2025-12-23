@@ -1,0 +1,37 @@
+<!--pages/chat/index.wxml-->
+<view class="container">
+  <view class="messages">
+    <view 
+      wx:for="{{messages}}" 
+      wx:key="index" 
+      class="message {{item.role}}"
+    >
+      <view class="message-content">{{item.content}}</view>
+      <view wx:if="{{item.sources && item.sources.length > 0}}" class="sources">
+        <text class="source-label">参考来源：</text>
+        <text 
+          wx:for="{{item.sources}}" 
+          wx:key="id" 
+          wx:for-item="source"
+          class="source-item"
+        >
+          {{source.title}}
+        </text>
+      </view>
+    </view>
+    <view wx:if="{{loading}}" class="loading">AI正在思考...</view>
+  </view>
+  
+  <view class="input-area">
+    <input 
+      class="input" 
+      placeholder="输入消息..." 
+      value="{{inputValue}}"
+      bindinput="onInput"
+      confirm-type="send"
+      bindconfirm="sendMessage"
+    />
+    <button class="send-btn" bindtap="sendMessage" disabled="{{loading}}">发送</button>
+  </view>
+</view>
+

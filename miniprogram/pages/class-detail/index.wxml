@@ -1,0 +1,167 @@
+<!--pages/class-detail/index.wxml-->
+<view class="container">
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+
+  <view wx:else class="content">
+    <!-- 课程信息卡片 -->
+    <view class="class-card">
+      <view class="class-header">
+        <text class="class-name">{{classInfo.name}}</text>
+        <view class="class-status {{classInfo.available ? 'available' : 'full'}}">
+          {{classInfo.available ? '可预订' : '已满'}}
+        </view>
+      </view>
+
+      <view class="class-info-section">
+        <view class="info-row">
+          <text class="info-label">👤 老师</text>
+          <text class="info-value">{{classInfo.instructor}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">🕐 时间</text>
+          <text class="info-value">{{classInfo.start_time || ''}} - {{classInfo.end_time || ''}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">👥 人数</text>
+          <text class="info-value">{{classInfo.booked_count}}/{{classInfo.capacity}}人</text>
+        </view>
+      </view>
+
+      <view wx:if="{{classInfo.description}}" class="description-section">
+        <text class="section-title">课程介绍</text>
+        <text class="description">{{classInfo.description}}</text>
+      </view>
+
+      <view class="instructor-section">
+        <text class="section-title">老师介绍</text>
+        <text class="instructor-info">{{classInfo.instructor}}老师拥有丰富的瑜伽教学经验...</text>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button 
+        wx:if="{{!userBooking && classInfo.available}}"
+        class="btn btn-primary"
+        bindtap="bookClass"
+      >
+        立即预订
+      </button>
+      <button 
+        wx:if="{{userBooking && userBooking.status === 'confirmed'}}"
+        class="btn btn-cancel"
+        bindtap="cancelBooking"
+      >
+        取消预订
+      </button>
+      <button 
+        wx:if="{{userBooking}}"
+        class="btn btn-review"
+        bindtap="showReview"
+      >
+        {{userReview ? '查看评价' : '评价课程'}}
+      </button>
+    </view>
+
+    <!-- 评价列表 -->
+    <view class="reviews-section">
+      <view class="section-header">
+        <text class="section-title">课程评价</text>
+        <text class="review-count">({{reviews.length}})</text>
+      </view>
+
+      <view wx:if="{{reviews.length === 0}}" class="empty-reviews">
+        <text>暂无评价</text>
+      </view>
+
+      <view wx:for="{{reviews}}" wx:key="id" class="review-item">
+        <view class="review-header">
+          <text class="review-user">{{item.user_name || '匿名用户'}}</text>
+          <view class="review-rating">
+            <text wx:for="{{5}}" wx:key="*this" class="star {{index < item.rating ? 'filled' : ''}}">★</text>
+          </view>
+        </view>
+        <text wx:if="{{item.content}}" class="review-content">{{item.content}}</text>
+        <view wx:if="{{item.images && item.images.length > 0}}" class="review-images">
+          <image 
+            wx:for="{{item.images}}" 
+            wx:for-item="img"
+            wx:key="*this"
+            src="{{img}}"
+            mode="aspectFill"
+            class="review-image"
+            bindtap="previewImage"
+            data-urls="{{item.images}}"
+            data-current="{{img}}"
+          />
+        </view>
+        <text class="review-time">{{formatDateTime(item.created_at)}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 评价弹窗 -->
+  <view wx:if="{{showReviewModal}}" class="modal-overlay" bindtap="closeReviewModal">
+    <view class="modal-content" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">评价课程</text>
+        <text class="modal-close" bindtap="closeReviewModal">✕</text>
+      </view>
+
+      <view class="modal-body">
+        <view class="rating-section">
+          <text class="rating-label">评分</text>
+          <view class="rating-stars">
+            <text 
+              wx:for="{{5}}" 
+              wx:key="*this"
+              class="star-input {{index < reviewForm.rating ? 'filled' : ''}}"
+              bindtap="onRatingChange"
+              data-value="{{index + 1}}"
+            >★</text>
+          </view>
+        </view>
+
+        <view class="content-section">
+          <text class="content-label">评价内容</text>
+          <textarea 
+            class="content-input"
+            placeholder="请输入您的评价..."
+            value="{{reviewForm.content}}"
+            bindinput="onReviewContentInput"
+            maxlength="500"
+          />
+        </view>
+
+        <view class="images-section">
+          <text class="images-label">上传图片（可选，最多3张）</text>
+          <view class="images-upload">
+            <view 
+              wx:for="{{reviewForm.images}}" 
+              wx:key="*this"
+              class="image-preview"
+            >
+              <image src="{{item}}" mode="aspectFill" class="preview-img" />
+              <text class="remove-img" bindtap="removeImage" data-index="{{index}}">✕</text>
+            </view>
+            <view 
+              wx:if="{{reviewForm.images.length < 3}}"
+              class="image-upload-btn"
+              bindtap="chooseImages"
+            >
+              <text>+</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="modal-footer">
+        <button class="btn btn-cancel" bindtap="closeReviewModal">取消</button>
+        <button class="btn btn-primary" bindtap="submitReview">提交</button>
+      </view>
+    </view>
+  </view>
+</view>
+

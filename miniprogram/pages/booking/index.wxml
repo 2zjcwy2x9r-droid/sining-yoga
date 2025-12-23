@@ -1,0 +1,38 @@
+<!--pages/booking/index.wxml-->
+<view class="container">
+  <view class="date-selector">
+    <picker mode="date" value="{{selectedDate}}" bindchange="onDateChange">
+      <view class="picker">
+        选择日期：{{selectedDate}}
+      </view>
+    </picker>
+  </view>
+
+  <view class="classes-list">
+    <view 
+      wx:for="{{classes}}" 
+      wx:key="id" 
+      class="class-item"
+    >
+      <view class="class-info">
+        <text class="class-name">{{item.name}}</text>
+        <text class="class-instructor">教练：{{item.instructor}}</text>
+        <text class="class-time">{{item.startTime}} - {{item.endTime}}</text>
+        <text class="class-capacity">
+          已预订：{{item.bookedCount}}/{{item.capacity}}
+        </text>
+      </view>
+      <button 
+        class="book-btn {{item.available ? '' : 'disabled'}}"
+        bindtap="bookClass"
+        data-id="{{item.id}}"
+        disabled="{{!item.available}}"
+      >
+        {{item.available ? '预订' : '已满'}}
+      </button>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+</view>
+

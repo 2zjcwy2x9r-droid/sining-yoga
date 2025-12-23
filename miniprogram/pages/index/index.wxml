@@ -1,0 +1,66 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- 顶部欢迎区域 -->
+  <view class="header">
+    <view class="welcome">
+      <text class="title">本周课程</text>
+      <text class="subtitle">选择您喜欢的课程</text>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 课程列表 -->
+  <view wx:else class="classes-container">
+    <view wx:if="{{classes.length === 0}}" class="empty">
+      <text>本周暂无课程</text>
+    </view>
+    
+    <view wx:for="{{classes}}" wx:key="date" class="day-section">
+      <view class="day-header">
+        <text class="day-label">{{item.dateLabel}}</text>
+        <text class="day-date">{{item.date}}</text>
+      </view>
+      
+      <view class="classes-list">
+        <view 
+          wx:for="{{item.classes}}" 
+          wx:for-item="class"
+          wx:key="id" 
+          class="class-card"
+          bindtap="navigateToClassDetail"
+          data-id="{{class.id}}"
+        >
+          <view class="class-header">
+            <text class="class-name">{{class.name}}</text>
+            <view class="class-status {{class.available ? 'available' : 'full'}}">
+              {{class.available ? '可预订' : '已满'}}
+            </view>
+          </view>
+          
+          <view class="class-info">
+            <view class="info-item">
+              <text class="info-icon">👤</text>
+              <text class="info-text">{{class.instructor}}</text>
+            </view>
+            <view class="info-item">
+              <text class="info-icon">🕐</text>
+              <text class="info-text">{{class.start_time}} - {{class.end_time}}</text>
+            </view>
+            <view class="info-item">
+              <text class="info-icon">👥</text>
+              <text class="info-text">{{class.booked_count}}/{{class.capacity}}人</text>
+            </view>
+          </view>
+          
+          <view wx:if="{{class.description}}" class="class-desc">
+            {{class.description}}
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,71 @@
+/* pages/booking/index.wxss */
+.container {
+  padding: 20rpx;
+}
+
+.date-selector {
+  margin-bottom: 20rpx;
+}
+
+.picker {
+  padding: 20rpx;
+  background-color: #f0f0f0;
+  border-radius: 10rpx;
+}
+
+.classes-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.class-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+  background-color: white;
+  border-radius: 10rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.class-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.class-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.class-instructor,
+.class-time,
+.class-capacity {
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 5rpx;
+}
+
+.book-btn {
+  width: 120rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  background-color: #007aff;
+  color: white;
+  border-radius: 10rpx;
+  font-size: 28rpx;
+}
+
+.book-btn.disabled {
+  background-color: #ccc;
+}
+
+.loading {
+  text-align: center;
+  padding: 40rpx;
+  color: #999;
+}
+
