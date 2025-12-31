@@ -12,15 +12,15 @@ import (
 
 // Config 应用配置
 type Config struct {
-	Server   ServerConfig
-	Database DatabaseConfig
-	MinIO    MinIOConfig
-	Qdrant   QdrantConfig
-	OpenAI   OpenAIConfig
-	Vector   VectorServiceConfig
+	Server    ServerConfig
+	Database  DatabaseConfig
+	MinIO     MinIOConfig
+	Qdrant    QdrantConfig
+	OpenAI    OpenAIConfig
+	Vector    VectorServiceConfig
 	Embedding EmbeddingServiceConfig
-	Jaeger   JaegerConfig
-	Log      LogConfig
+	Jaeger    JaegerConfig
+	Log       LogConfig
 }
 
 // ServerConfig 服务器配置
@@ -119,7 +119,7 @@ func Load() (*Config, error) {
 		},
 		Qdrant: QdrantConfig{
 			Host: getEnv("QDRANT_HOST", "localhost"),
-			Port:  getEnvAsInt("QDRANT_PORT", 6333),
+			Port: getEnvAsInt("QDRANT_PORT", 6333),
 		},
 		OpenAI: OpenAIConfig{
 			APIKey:  getEnv("OPENAI_API_KEY", ""),
@@ -228,4 +228,3 @@ func NewLogger(cfg LogConfig) (*zap.Logger, error) {
 
 	return logger, nil
 }
-

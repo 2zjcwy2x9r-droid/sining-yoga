@@ -22,13 +22,17 @@ echo -e "${GREEN}========================================"
 # 1. 停止并清理所有相关进程
 echo -e "${YELLOW}[1/6] 停止所有相关进程...${NC}"
 
-# 停止Docker容器
+# 停止Docker容器 - 更彻底的清理
 echo "  停止Docker容器..."
-# 先显式停止可能存在的容器（按名称）
-docker stop yoga-vector-service yoga-embedding-service 2>/dev/null || true
-docker rm yoga-vector-service yoga-embedding-service 2>/dev/null || true
-# 然后停止所有docker-compose服务
-docker-compose down -v 2>/dev/null || true
+# 先停止所有相关容器（包括已停止的）
+for container in yoga-postgres yoga-minio yoga-qdrant yoga-jaeger yoga-vector-service yoga-embedding-service; do
+    docker stop "$container" 2>/dev/null || true
+    docker rm -f "$container" 2>/dev/null || true
+done
+# 停止所有docker-compose服务并清理
+docker-compose down -v --remove-orphans 2>/dev/null || true
+# 强制删除所有相关容器（包括已停止的）
+docker ps -a --filter "name=yoga-" --format "{{.Names}}" | xargs -r docker rm -f 2>/dev/null || true
 # 等待端口释放
 sleep 3
 
@@ -46,28 +50,29 @@ pkill -f "uvicorn.*vector_service" || true
 pkill -f "uvicorn.*embedding_service" || true
 sleep 2
 
-# 清理端口占用（可选，如果需要强制清理）
+# 清理端口占用（强制清理）
 echo "  清理端口占用..."
-# 再次确保停止可能占用端口的Docker容器（通过端口过滤）
-for port in 8003 8002 8080; do
-    container_ids=$(docker ps -q --filter "publish=$port" 2>/dev/null || true)
+# 再次确保停止可能占用端口的Docker容器（通过端口过滤，包括已停止的）
+for port in 8003 8002 8080 5432 9000 6333 16686 14268; do
+    # 查找所有占用该端口的容器（包括已停止的）
+    container_ids=$(docker ps -aq --filter "publish=$port" 2>/dev/null || true)
     if [ -n "$container_ids" ]; then
-        echo "    停止占用端口 $port 的容器..."
-        docker stop $container_ids 2>/dev/null || true
-        docker rm $container_ids 2>/dev/null || true
+        echo "    停止并删除占用端口 $port 的容器..."
+        echo $container_ids | xargs docker stop 2>/dev/null || true
+        echo $container_ids | xargs docker rm -f 2>/dev/null || true
     fi
 done
 sleep 2
-# 清理端口占用的进程
-for port in 8080 8003 8002 5432 9000 6333 16686; do
+# 清理端口占用的进程（强制kill）
+for port in 8080 8003 8002 5432 9000 6333 16686 14268; do
     pids=$(lsof -ti:$port 2>/dev/null || true)
     if [ -n "$pids" ]; then
-        echo "    清理端口 $port 的占用进程..."
+        echo "    强制清理端口 $port 的占用进程..."
         echo $pids | xargs kill -9 2>/dev/null || true
     fi
 done
 # 等待端口完全释放
-sleep 2
+sleep 3
 
 echo -e "${GREEN}✓ 所有进程已停止${NC}"
 
@@ -126,6 +131,11 @@ echo -e "${GREEN}✓ 环境检查通过${NC}"
 
 # 3. 启动基础设施服务
 echo -e "${YELLOW}[3/6] 启动基础设施服务（Docker）...${NC}"
+
+# 再次确认清理（防止残留容器）
+echo "  最终确认清理残留容器..."
+docker ps -a --filter "name=yoga-" --format "{{.Names}}" | xargs -r docker rm -f 2>/dev/null || true
+sleep 1
 
 # 启动Docker Compose服务（只启动基础设施服务，不启动vector-service和embedding-service）
 docker-compose up -d postgres minio qdrant jaeger
