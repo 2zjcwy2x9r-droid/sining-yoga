@@ -52,23 +52,20 @@ sleep 2
 
 # 清理端口占用（强制清理）
 echo "  清理端口占用..."
-# 再次确保停止可能占用端口的Docker容器（通过端口过滤，包括已停止的）
-for port in 8003 8002 8080 5432 9000 6333 16686 14268; do
-    # 查找所有占用该端口的容器（包括已停止的）
-    container_ids=$(docker ps -aq --filter "publish=$port" 2>/dev/null || true)
-    if [ -n "$container_ids" ]; then
-        echo "    停止并删除占用端口 $port 的容器..."
-        echo $container_ids | xargs docker stop 2>/dev/null || true
-        echo $container_ids | xargs docker rm -f 2>/dev/null || true
-    fi
-done
-sleep 2
 # 清理端口占用的进程（强制kill）
 for port in 8080 8003 8002 5432 9000 6333 16686 14268; do
     pids=$(lsof -ti:$port 2>/dev/null || true)
     if [ -n "$pids" ]; then
         echo "    强制清理端口 $port 的占用进程..."
         echo $pids | xargs kill -9 2>/dev/null || true
+    fi
+done
+# 再次查找并清理所有相关容器（通过名称匹配）
+echo "  清理所有相关容器..."
+docker ps -a --filter "name=yoga-" --format "{{.ID}}" | while read container_id; do
+    if [ -n "$container_id" ]; then
+        docker stop "$container_id" 2>/dev/null || true
+        docker rm -f "$container_id" 2>/dev/null || true
     fi
 done
 # 等待端口完全释放
